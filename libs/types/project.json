@@ -1,0 +1,22 @@
+{
+  "name": "@cloudsmiths/types",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/types/src",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p libs/types/tsconfig.json"
+      },
+      "outputs": ["{workspaceRoot}/dist/libs/types"]
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint libs/types/src --ext .ts"
+      }
+    }
+  },
+  "tags": ["scope:shared", "type:types"]
+}

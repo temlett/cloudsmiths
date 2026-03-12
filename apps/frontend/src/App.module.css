@@ -3,6 +3,25 @@
   gap: 24px;
 }
 
+.favoritesSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.favoriteChip {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(15, 126, 255, 0.1);
+  color: var(--color-accent);
+  font-size: 0.9rem;
+}
+
+.helperText {
+  margin: 0;
+  color: var(--color-muted);
+}
+
 .panelGrid {
   display: grid;
   grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);

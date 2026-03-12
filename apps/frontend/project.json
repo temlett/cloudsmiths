@@ -1,0 +1,38 @@
+{
+  "name": "@cloudsmiths/frontend",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/frontend/src",
+  "targets": {
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/frontend",
+        "command": "vite"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/frontend",
+        "command": "tsc -p tsconfig.app.json --noEmit && vite build"
+      },
+      "dependsOn": ["@cloudsmiths/types:build"],
+      "outputs": ["{workspaceRoot}/dist/frontend"]
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint apps/frontend/src --ext .ts,.tsx"
+      }
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/frontend",
+        "command": "vite preview"
+      }
+    }
+  },
+  "tags": []
+}

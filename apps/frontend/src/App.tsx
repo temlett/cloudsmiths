@@ -8,13 +8,22 @@ import { LoadingState } from './components/LoadingState'
 import { PageLayout } from './components/PageLayout'
 import { useBreedImages } from './hooks/useBreedImages'
 import { useBreeds } from './hooks/useBreeds'
-import type { BreedOption } from './types/dog'
+import { useFavorites } from './hooks/useFavorites'
+import type { BreedOption } from '@cloudsmiths/types'
 import styles from './App.module.css'
 
 function App() {
   const [query, setQuery] = useState('')
   const [selectedBreed, setSelectedBreed] = useState<BreedOption | null>(null)
   const { breeds, isLoading, error } = useBreeds()
+  const {
+    favorites,
+    favoriteBreeds,
+    isLoading: favoritesLoading,
+    isUpdating: favoritesUpdating,
+    error: favoritesError,
+    toggleFavorite,
+  } = useFavorites()
   const {
     images,
     isLoading: imagesLoading,
@@ -28,9 +37,28 @@ function App() {
   return (
     <PageLayout
       title="Browse dog breeds"
-      description="A starter structure for the Cloudsmiths challenge with feature folders, reusable UI pieces, and room for the API flow."
+      description="Explore dog breeds, view three random images, and persist your favorite breeds through the new backend API."
     >
       <div className={styles.shell}>
+        <div>
+          <p className={styles.helperText}>
+            {favoritesLoading
+              ? 'Loading favorites...'
+              : favorites.length > 0
+                ? 'Favorites'
+                : 'No favorites saved yet. Use the star button to save one.'}
+          </p>
+          {favorites.length > 0 ? (
+            <div className={styles.favoritesSummary}>
+              {favorites.map((favorite) => (
+                <span key={favorite.breed} className={styles.favoriteChip}>
+                  {favorite.label}
+                </span>
+              ))}
+            </div>
+          ) : null}
+          {favoritesError ? <ErrorState message={favoritesError} /> : null}
+        </div>
         <div className={styles.panelGrid}>
           <aside className={styles.panel}>
             <BreedSearch query={query} onQueryChange={setQuery} />
@@ -42,7 +70,12 @@ function App() {
               <BreedList
                 breeds={filteredBreeds}
                 selectedBreed={selectedBreed?.value ?? null}
+                favoriteBreeds={favoriteBreeds}
+                isFavoritePending={favoritesUpdating}
                 onSelect={setSelectedBreed}
+                onToggleFavorite={(breed) => {
+                  void toggleFavorite(breed)
+                }}
               />
             )}
           </aside>
@@ -57,7 +90,11 @@ function App() {
             ) : imagesError ? (
               <ErrorState message={imagesError} />
             ) : (
-              <DogImageGallery breedName={selectedBreed.label} images={images} />
+              <DogImageGallery
+                breedName={selectedBreed.label}
+                images={images}
+                isFavorite={favoriteBreeds.has(selectedBreed.value)}
+              />
             )}
           </section>
         </div>
