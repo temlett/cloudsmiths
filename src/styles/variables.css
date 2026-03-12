@@ -1,0 +1,12 @@
+:root {
+  --color-background: #f4efe8;
+  --color-surface: rgba(255, 255, 255, 0.82);
+  --color-surface-alt: #dfe7f2;
+  --color-border: rgba(20, 30, 48, 0.12);
+  --color-text: #18212f;
+  --color-muted: #5c6778;
+  --color-accent: #0f7eff;
+  --font-body: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+  --font-display: 'Space Grotesk', 'Avenir Next', sans-serif;
+  --shadow-soft: 0 20px 50px rgba(24, 33, 47, 0.08);
+}
