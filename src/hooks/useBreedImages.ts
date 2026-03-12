@@ -1,62 +1,62 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
-import { fetchBreedImages } from '../services/dogApi'
+import { fetchBreedRandomImages } from "../services/dogApi";
 
 interface UseBreedImagesResult {
-  images: string[]
-  isLoading: boolean
-  error: string | null
+  images: string[];
+  isLoading: boolean;
+  error: string | null;
 }
 
 export function useBreedImages(breed: string | null): UseBreedImagesResult {
-  const [images, setImages] = useState<string[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [images, setImages] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let isMounted = true
+    let isMounted = true;
 
     async function loadImages(selectedBreed: string) {
-      setIsLoading(true)
-      setError(null)
+      setIsLoading(true);
+      setError(null);
 
       try {
-        const response = await fetchBreedImages(selectedBreed)
+        const response = await fetchBreedRandomImages(selectedBreed);
 
         if (isMounted) {
-          setImages(response.message)
+          setImages(response.message);
         }
       } catch (loadError) {
         if (isMounted) {
           setError(
             loadError instanceof Error
               ? loadError.message
-              : 'Unable to load breed images.',
-          )
-          setImages([])
+              : "Unable to load breed images.",
+          );
+          setImages([]);
         }
       } finally {
         if (isMounted) {
-          setIsLoading(false)
+          setIsLoading(false);
         }
       }
     }
 
     if (!breed) {
-      setImages([])
-      setIsLoading(false)
-      setError(null)
+      setImages([]);
+      setIsLoading(false);
+      setError(null);
       return () => {
-        isMounted = false
-      }
+        isMounted = false;
+      };
     }
 
-    void loadImages(breed)
+    void loadImages(breed);
 
     return () => {
-      isMounted = false
-    }
-  }, [breed])
+      isMounted = false;
+    };
+  }, [breed]);
 
-  return { images, isLoading, error }
+  return { images, isLoading, error };
 }
