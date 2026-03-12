@@ -10,9 +10,21 @@
     );
 }
 
+.heroWrap {
+  position: relative;
+  max-width: 1120px;
+  margin: 0 auto 32px;
+}
+
+.headerAction {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
 .hero {
   max-width: 720px;
-  margin: 0 auto 32px;
+  margin: 0 auto;
   text-align: center;
 }
 
@@ -39,4 +51,10 @@
   max-width: 1120px;
   margin: 0 auto;
   padding-bottom: 24px;
+}
+
+@media (max-width: 640px) {
+  .headerAction {
+    margin-bottom: 20px;
+  }
 }
