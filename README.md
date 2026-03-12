@@ -1,73 +1,94 @@
-# React + TypeScript + Vite
+# Cloudsmiths Dog Breed Browser Monorepo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository is now an Nx workspace containing:
 
-Currently, two official plugins are available:
+- `apps/frontend` (`@cloudsmiths/frontend`): the React + Vite dog breed browser
+- `apps/backend` (`@cloudsmiths/backend`): a NestJS API for persisting favorite breeds
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The frontend still fulfills the original assessment requirements from `docs/spec.md` and now also supports saving/removing favorite breeds through the backend.
 
-## React Compiler
+## Workspace structure
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+apps/
+  frontend/        # React SPA powered by Vite
+  backend/         # NestJS API with file-based persistence
+libs/
+  types/           # Shared TypeScript types used across apps (@cloudsmiths/types)
+docs/              # spec and kanban reference docs
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Prerequisites
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Node.js 20+
+- npm 10+
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Install dependencies
+
+```bash
+npm install
+```
+
+## Run the apps
+
+Start the favorites API:
+
+```bash
+npm run dev:api
+```
+
+In another terminal, start the frontend:
+
+```bash
+npm run dev:frontend
+```
+
+App URLs:
+
+- Frontend: `http://localhost:4200`
+- Favorites API: `http://localhost:3333`
+
+If needed, you can point the frontend at a different API URL with:
+
+```bash
+VITE_FAVORITES_API_URL=http://localhost:3333 npm run dev:frontend
+```
+
+## Available scripts
+
+```bash
+npm run dev            # start the frontend through Nx
+npm run dev:frontend   # start the Vite frontend
+npm run dev:api        # start the favorites backend in watch mode
+npm run build          # build all Nx projects
+npm run build:frontend # build the frontend only
+npm run build:api      # compile the backend only
+npm run lint           # lint all Nx projects
+npm run preview        # preview the frontend production build
+```
+
+## Favorites API
+
+The backend persists favorites in `data/favorites.json` at the workspace root and exposes:
+
+- `GET /api/favorites`
+- `POST /api/favorites`
+- `DELETE /api/favorites/:breed`
+
+Example POST payload:
+
+```json
+{
+  "breed": "beagle",
+  "label": "Beagle"
+}
+```
+
+## Validation
+
+The workspace has been validated with:
+
+```bash
+npm run build
+npm run lint
 ```

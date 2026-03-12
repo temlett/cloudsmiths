@@ -1,0 +1,36 @@
+{
+  "name": "@cloudsmiths/backend",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/backend/src",
+  "targets": {
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/backend",
+        "command": "tsx watch --tsconfig tsconfig.app.json src/main.ts"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p apps/backend/tsconfig.app.json"
+      },
+      "dependsOn": ["@cloudsmiths/types:build"],
+      "outputs": ["{workspaceRoot}/dist/apps/backend"]
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node dist/apps/backend/main.js"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint apps/backend/src --ext .ts"
+      }
+    }
+  },
+  "tags": []
+}
