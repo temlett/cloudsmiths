@@ -11,6 +11,9 @@ const BREEDS_CACHE_KEY = "cloudsmiths.cache.breeds";
 const FAVORITES_CACHE_KEY = "cloudsmiths.cache.favorites";
 const BREEDS_CACHE_TTL_MS = 60 * 60 * 1000;
 const FAVORITES_CACHE_TTL_MS = 30 * 1000;
+const RATE_LIMIT_STATUS = 429;
+const DEFAULT_RETRY_DELAY_MS = 1_000;
+const MAX_RATE_LIMIT_RETRIES = 2;
 
 interface CacheEntry<T> {
   value: T;
@@ -82,6 +85,46 @@ function clearCache(key: string) {
   storage?.removeItem(key);
 }
 
+function wait(delayMs: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, delayMs);
+  });
+}
+
+function getRetryDelayMs(response: Response, attempt: number) {
+  const retryAfter = response.headers.get("Retry-After");
+
+  if (retryAfter) {
+    const retryAfterSeconds = Number(retryAfter);
+
+    if (!Number.isNaN(retryAfterSeconds) && retryAfterSeconds >= 0) {
+      return retryAfterSeconds * 1_000;
+    }
+  }
+
+  return DEFAULT_RETRY_DELAY_MS * 2 ** attempt;
+}
+
+async function fetchWithRateLimitRetry(
+  input: RequestInfo | URL,
+  init?: RequestInit,
+  maxRetries: number = MAX_RATE_LIMIT_RETRIES,
+): Promise<Response> {
+  let attempt = 0;
+
+  while (true) {
+    const response = await fetch(input, init);
+
+    if (response.status !== RATE_LIMIT_STATUS || attempt >= maxRetries) {
+      return response;
+    }
+
+    const delayMs = getRetryDelayMs(response, attempt);
+    attempt += 1;
+    await wait(delayMs);
+  }
+}
+
 export async function fetchBreeds(): Promise<DogApiListResponse> {
   const cachedBreeds = readCache(BREEDS_CACHE_KEY, breedsMemoryCache);
   if (cachedBreeds) {
@@ -89,7 +132,9 @@ export async function fetchBreeds(): Promise<DogApiListResponse> {
     return cachedBreeds.value;
   }
 
-  const response = await fetch(`${DOG_API_BASE_URL}/breeds/list/all`);
+  const response = await fetchWithRateLimitRetry(
+    `${DOG_API_BASE_URL}/breeds/list/all`,
+  );
 
   if (!response.ok) {
     throw new Error("Unable to load breeds.");
@@ -104,7 +149,7 @@ export async function fetchBreedRandomImages(
   breed: string,
   count: number = 3,
 ): Promise<DogApiImagesResponse> {
-  const response = await fetch(
+  const response = await fetchWithRateLimitRetry(
     `${DOG_API_BASE_URL}/breed/${breed}/images/random/${count}`,
   );
 

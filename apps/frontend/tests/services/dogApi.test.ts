@@ -4,6 +4,7 @@ import {
   addFavorite,
   clearDogApiCaches,
   clearDogApiMemoryCaches,
+  fetchBreedRandomImages,
   fetchBreeds,
   fetchFavorites,
   removeFavorite,
@@ -11,12 +12,14 @@ import {
 
 describe("dog api service caching", () => {
   beforeEach(() => {
+    vi.useFakeTimers();
     sessionStorage.clear();
     clearDogApiCaches();
     vi.restoreAllMocks();
   });
 
   afterEach(() => {
+    vi.useRealTimers();
     sessionStorage.clear();
     clearDogApiCaches();
   });
@@ -113,5 +116,53 @@ describe("dog api service caching", () => {
     const cachedAfterRemove = await fetchFavorites();
 
     expect(cachedAfterRemove).toEqual(removed);
+  });
+
+  it("retries dog api requests after rate limiting using retry-after", async () => {
+    const fetchSpy = vi
+      .spyOn(global, "fetch")
+      .mockResolvedValueOnce(
+        new Response(null, {
+          status: 429,
+          headers: { "Retry-After": "1" },
+        }),
+      )
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            message: ["https://example.com/hound-1.jpg"],
+            status: "success",
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } },
+        ),
+      );
+
+    const requestPromise = fetchBreedRandomImages("hound", 1);
+
+    await vi.advanceTimersByTimeAsync(1_000);
+
+    await expect(requestPromise).resolves.toEqual({
+      message: ["https://example.com/hound-1.jpg"],
+      status: "success",
+    });
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it("surfaces an error when rate limiting continues past retry attempts", async () => {
+    const fetchSpy = vi.spyOn(global, "fetch").mockResolvedValue(
+      new Response(null, {
+        status: 429,
+      }),
+    );
+
+    const requestPromise = fetchBreedRandomImages("hound", 1);
+    const expectation = expect(requestPromise).rejects.toThrow(
+      "Unable to load random images for hound.",
+    );
+
+    await vi.advanceTimersByTimeAsync(7_000);
+
+    await expectation;
+    expect(fetchSpy).toHaveBeenCalledTimes(3);
   });
 });
