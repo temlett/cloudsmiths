@@ -44,6 +44,11 @@
   box-shadow: var(--shadow-soft);
 }
 
+.favoritesContent {
+  display: grid;
+  gap: 16px;
+}
+
 .favoriteChip {
   padding: 8px 12px;
   border-radius: 999px;
@@ -96,6 +101,18 @@
   place-items: center;
   color: var(--color-muted);
   text-align: center;
+}
+
+.emptyStateContent {
+  display: grid;
+  gap: 8px;
+  max-width: 28rem;
+}
+
+.emptyStateTitle {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1.2rem;
 }
 
 .modalBackdrop {

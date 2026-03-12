@@ -37,7 +37,10 @@ function App() {
   const {
     favorites,
     favoriteImageUrls,
+    isLoading: favoritesLoading,
     isUpdating: favoritesUpdating,
+    loadError: favoritesLoadError,
+    updateError: favoritesUpdateError,
     toggleFavorite,
   } = useFavorites();
   const {
@@ -250,6 +253,22 @@ function App() {
                         <LoadingState label="Loading breeds..." />
                       ) : error ? (
                         <ErrorState message={error} />
+                      ) : filteredBreeds.length === 0 ? (
+                        <div
+                          className={styles.emptyState}
+                          role="status"
+                          aria-live="polite"
+                        >
+                          <div className={styles.emptyStateContent}>
+                            <h2 className={styles.emptyStateTitle}>
+                              No breeds match “{query.trim()}”
+                            </h2>
+                            <p className={styles.helperText}>
+                              Try a broader search or clear the filter to browse
+                              every available breed.
+                            </p>
+                          </div>
+                        </div>
                       ) : (
                         <BreedList
                           breeds={filteredBreeds}
@@ -300,26 +319,48 @@ function App() {
               </>
             ) : (
               <section className={styles.favoritesSection}>
-                <FavoritesGallery
-                  favorites={favorites}
-                  isUpdating={favoritesUpdating}
-                  onImageSelect={(favorite) => {
-                    setEnlargedImage({
-                      imageUrl: favorite.imageUrl,
-                      label: favorite.label,
-                    });
-                  }}
-                  onOpenBreed={openFavoriteBreed}
-                  onRemove={(favoriteId) => {
-                    const favorite = favorites.find(
-                      (item) => item.id === favoriteId,
-                    );
-                    if (!favorite) {
-                      return;
-                    }
-                    void toggleFavorite(favorite);
-                  }}
-                />
+                <div className={styles.favoritesContent}>
+                  {favoritesLoading ? (
+                    <LoadingState label="Loading favorites..." />
+                  ) : null}
+
+                  {favoritesLoadError ? (
+                    <ErrorState
+                      message={favoritesLoadError}
+                      hint="Start the backend API or check the configured favorites base URL."
+                    />
+                  ) : null}
+
+                  {favoritesUpdateError ? (
+                    <ErrorState
+                      message={favoritesUpdateError}
+                      hint="The favorites list is still available. Try the action again in a moment."
+                    />
+                  ) : null}
+
+                  {!favoritesLoading && !favoritesLoadError ? (
+                    <FavoritesGallery
+                      favorites={favorites}
+                      isUpdating={favoritesUpdating}
+                      onImageSelect={(favorite) => {
+                        setEnlargedImage({
+                          imageUrl: favorite.imageUrl,
+                          label: favorite.label,
+                        });
+                      }}
+                      onOpenBreed={openFavoriteBreed}
+                      onRemove={(favoriteId) => {
+                        const favorite = favorites.find(
+                          (item) => item.id === favoriteId,
+                        );
+                        if (!favorite) {
+                          return;
+                        }
+                        void toggleFavorite(favorite);
+                      }}
+                    />
+                  ) : null}
+                </div>
               </section>
             )}
 

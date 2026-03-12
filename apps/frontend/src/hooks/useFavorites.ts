@@ -12,7 +12,8 @@ interface UseFavoritesResult {
   favoriteImageUrls: Set<string>;
   isLoading: boolean;
   isUpdating: boolean;
-  error: string | null;
+  loadError: string | null;
+  updateError: string | null;
   toggleFavorite: (favorite: {
     breed: string;
     label: string;
@@ -24,7 +25,8 @@ export function useFavorites(): UseFavoritesResult {
   const [favorites, setFavorites] = useState<FavoriteImage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [updateError, setUpdateError] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -38,7 +40,7 @@ export function useFavorites(): UseFavoritesResult {
         }
       } catch (loadError) {
         if (isMounted) {
-          setError(
+          setLoadError(
             loadError instanceof Error
               ? loadError.message
               : "Unable to load favorite breeds.",
@@ -69,7 +71,7 @@ export function useFavorites(): UseFavoritesResult {
     imageUrl: string;
   }) {
     setIsUpdating(true);
-    setError(null);
+    setUpdateError(null);
 
     try {
       const existing = favorites.find(
@@ -81,7 +83,7 @@ export function useFavorites(): UseFavoritesResult {
 
       setFavorites(nextFavorites);
     } catch (updateError) {
-      setError(
+      setUpdateError(
         updateError instanceof Error
           ? updateError.message
           : "Unable to update favorite breeds.",
@@ -96,7 +98,8 @@ export function useFavorites(): UseFavoritesResult {
     favoriteImageUrls,
     isLoading,
     isUpdating,
-    error,
+    loadError,
+    updateError,
     toggleFavorite,
   };
 }
