@@ -1,0 +1,44 @@
+.shell {
+  display: grid;
+  gap: 24px;
+}
+
+.panelGrid {
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+  gap: 24px;
+}
+
+.panel,
+.galleryPanel,
+.emptyState {
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  border-radius: 28px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(14px);
+}
+
+.panel {
+  display: grid;
+  gap: 16px;
+  align-self: start;
+}
+
+.galleryPanel {
+  min-height: 420px;
+}
+
+.emptyState {
+  display: grid;
+  place-items: center;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .panelGrid {
+    grid-template-columns: 1fr;
+  }
+}
