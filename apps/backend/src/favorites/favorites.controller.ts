@@ -10,7 +10,7 @@ import {
   Post,
 } from "@nestjs/common";
 
-import type { FavoriteBreedDto } from "@cloudsmiths/types";
+import type { FavoriteImageDto } from "@cloudsmiths/types";
 
 import { FavoritesService } from "./favorites.service.js";
 
@@ -28,21 +28,19 @@ export class FavoritesController {
   }
 
   @Post()
-  async create(@Body() payload: FavoriteBreedDto) {
-    if (!payload?.breed || !payload?.label) {
-      throw new BadRequestException("breed and label are required.");
+  async create(@Body() payload: FavoriteImageDto) {
+    if (!payload?.breed || !payload?.label || !payload?.imageUrl) {
+      throw new BadRequestException("breed, label, and imageUrl are required.");
     }
 
     const favorites = await this.favoritesService.addFavorite(payload);
     return { favorites };
   }
 
-  @Delete(":breed")
+  @Delete(":id")
   @HttpCode(200)
-  async remove(@Param("breed") breed: string) {
-    const favorites = await this.favoritesService.removeFavorite(
-      decodeURIComponent(breed),
-    );
+  async remove(@Param("id") id: string) {
+    const favorites = await this.favoritesService.removeFavorite(id);
 
     return { favorites };
   }

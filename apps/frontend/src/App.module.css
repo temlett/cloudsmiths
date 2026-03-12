@@ -3,10 +3,38 @@
   gap: 24px;
 }
 
+.tabs {
+  display: flex;
+  gap: 12px;
+}
+
+.tab {
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.tabActive {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(15, 126, 255, 0.12);
+}
+
 .favoritesSummary {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.favoritesSection {
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  border-radius: 28px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
 }
 
 .favoriteChip {
@@ -43,6 +71,13 @@
   display: grid;
   gap: 16px;
   align-self: start;
+  max-height: 70vh;
+  overflow: scroll;
+}
+
+.breedListScroll {
+  overflow: auto;
+  min-height: 0;
 }
 
 .galleryPanel {
@@ -56,8 +91,66 @@
   text-align: center;
 }
 
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(24, 33, 47, 0.78);
+  backdrop-filter: blur(10px);
+}
+
+.modal {
+  position: relative;
+  width: min(100%, 960px);
+  max-height: calc(100vh - 48px);
+  padding: 16px;
+  border-radius: 28px;
+  background: var(--color-surface);
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.28);
+}
+
+.modalImage {
+  display: block;
+  width: 100%;
+  max-height: calc(100vh - 80px);
+  object-fit: contain;
+  border-radius: 20px;
+  background: var(--color-surface-alt);
+}
+
+.modalClose {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--color-text);
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(24, 33, 47, 0.2);
+}
+
 @media (max-width: 900px) {
   .panelGrid {
     grid-template-columns: 1fr;
+  }
+
+  .modalBackdrop {
+    padding: 16px;
+  }
+
+  .modal {
+    padding: 12px;
+  }
+
+  .modalClose {
+    top: 20px;
+    right: 20px;
   }
 }

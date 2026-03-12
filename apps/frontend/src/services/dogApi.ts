@@ -1,7 +1,7 @@
 import type {
   DogApiImagesResponse,
   DogApiListResponse,
-  FavoriteBreed,
+  FavoriteImage,
 } from "@cloudsmiths/types";
 
 const DOG_API_BASE_URL = "https://dog.ceo/api";
@@ -33,40 +33,41 @@ export async function fetchBreedRandomImages(
   return response.json();
 }
 
-export async function fetchFavorites(): Promise<FavoriteBreed[]> {
+export async function fetchFavorites(): Promise<FavoriteImage[]> {
   const response = await fetch(`${FAVORITES_API_BASE_URL}/api/favorites`);
 
   if (!response.ok) {
     throw new Error("Unable to load favorite breeds.");
   }
 
-  const data = (await response.json()) as { favorites: FavoriteBreed[] };
+  const data = (await response.json()) as { favorites: FavoriteImage[] };
   return data.favorites;
 }
 
 export async function addFavorite(
   breed: string,
   label: string,
-): Promise<FavoriteBreed[]> {
+  imageUrl: string,
+): Promise<FavoriteImage[]> {
   const response = await fetch(`${FAVORITES_API_BASE_URL}/api/favorites`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ breed, label }),
+    body: JSON.stringify({ breed, label, imageUrl }),
   });
 
   if (!response.ok) {
     throw new Error(`Unable to save ${label} as a favorite.`);
   }
 
-  const data = (await response.json()) as { favorites: FavoriteBreed[] };
+  const data = (await response.json()) as { favorites: FavoriteImage[] };
   return data.favorites;
 }
 
-export async function removeFavorite(breed: string): Promise<FavoriteBreed[]> {
+export async function removeFavorite(id: string): Promise<FavoriteImage[]> {
   const response = await fetch(
-    `${FAVORITES_API_BASE_URL}/api/favorites/${encodeURIComponent(breed)}`,
+    `${FAVORITES_API_BASE_URL}/api/favorites/${encodeURIComponent(id)}`,
     {
       method: "DELETE",
     },
@@ -76,6 +77,6 @@ export async function removeFavorite(breed: string): Promise<FavoriteBreed[]> {
     throw new Error("Unable to remove favorite breed.");
   }
 
-  const data = (await response.json()) as { favorites: FavoriteBreed[] };
+  const data = (await response.json()) as { favorites: FavoriteImage[] };
   return data.favorites;
 }

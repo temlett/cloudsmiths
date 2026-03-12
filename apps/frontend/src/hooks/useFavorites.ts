@@ -5,19 +5,23 @@ import {
   fetchFavorites,
   removeFavorite,
 } from "../services/dogApi";
-import type { BreedOption, FavoriteBreed } from "@cloudsmiths/types";
+import type { FavoriteImage } from "@cloudsmiths/types";
 
 interface UseFavoritesResult {
-  favorites: FavoriteBreed[];
-  favoriteBreeds: Set<string>;
+  favorites: FavoriteImage[];
+  favoriteImageUrls: Set<string>;
   isLoading: boolean;
   isUpdating: boolean;
   error: string | null;
-  toggleFavorite: (breed: BreedOption) => Promise<void>;
+  toggleFavorite: (favorite: {
+    breed: string;
+    label: string;
+    imageUrl: string;
+  }) => Promise<void>;
 }
 
 export function useFavorites(): UseFavoritesResult {
-  const [favorites, setFavorites] = useState<FavoriteBreed[]>([]);
+  const [favorites, setFavorites] = useState<FavoriteImage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -54,19 +58,26 @@ export function useFavorites(): UseFavoritesResult {
     };
   }, []);
 
-  const favoriteBreeds = useMemo(
-    () => new Set(favorites.map((favorite) => favorite.breed)),
+  const favoriteImageUrls = useMemo(
+    () => new Set(favorites.map((favorite) => favorite.imageUrl)),
     [favorites],
   );
 
-  async function toggleFavorite(breed: BreedOption) {
+  async function toggleFavorite(favorite: {
+    breed: string;
+    label: string;
+    imageUrl: string;
+  }) {
     setIsUpdating(true);
     setError(null);
 
     try {
-      const nextFavorites = favoriteBreeds.has(breed.value)
-        ? await removeFavorite(breed.value)
-        : await addFavorite(breed.value, breed.label);
+      const existing = favorites.find(
+        (item) => item.imageUrl === favorite.imageUrl,
+      );
+      const nextFavorites = existing
+        ? await removeFavorite(existing.id)
+        : await addFavorite(favorite.breed, favorite.label, favorite.imageUrl);
 
       setFavorites(nextFavorites);
     } catch (updateError) {
@@ -82,7 +93,7 @@ export function useFavorites(): UseFavoritesResult {
 
   return {
     favorites,
-    favoriteBreeds,
+    favoriteImageUrls,
     isLoading,
     isUpdating,
     error,

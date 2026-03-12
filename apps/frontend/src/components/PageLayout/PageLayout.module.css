@@ -3,7 +3,11 @@
   padding: 48px 20px 64px;
   background:
     radial-gradient(circle at top, rgba(180, 216, 255, 0.45), transparent 32%),
-    linear-gradient(180deg, var(--color-surface) 0%, var(--color-background) 100%);
+    linear-gradient(
+      180deg,
+      var(--color-surface) 0%,
+      var(--color-background) 100%
+    );
 }
 
 .hero {
@@ -34,4 +38,5 @@
 .content {
   max-width: 1120px;
   margin: 0 auto;
+  padding-bottom: 24px;
 }

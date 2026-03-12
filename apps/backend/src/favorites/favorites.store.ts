@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { FavoriteBreedRecord } from "@cloudsmiths/types";
+import type { FavoriteImage } from "@cloudsmiths/types";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,19 +18,23 @@ async function ensureDataFile() {
   }
 }
 
-export async function readFavorites(): Promise<FavoriteBreedRecord[]> {
+export async function readFavorites(): Promise<FavoriteImage[]> {
   await ensureDataFile();
   const contents = await readFile(dataFilePath, "utf8");
 
   try {
-    const parsed = JSON.parse(contents) as FavoriteBreedRecord[];
-    return parsed.sort((left, right) => left.label.localeCompare(right.label));
+    const parsed = JSON.parse(contents) as FavoriteImage[];
+    return parsed.sort(
+      (left, right) =>
+        right.createdAt.localeCompare(left.createdAt) ||
+        left.label.localeCompare(right.label),
+    );
   } catch {
     return [];
   }
 }
 
-export async function saveFavorites(favorites: FavoriteBreedRecord[]) {
+export async function saveFavorites(favorites: FavoriteImage[]) {
   await ensureDataFile();
   await writeFile(
     dataFilePath,

@@ -1,19 +1,19 @@
 import { Injectable } from "@nestjs/common";
 
-import type { FavoriteBreedDto, FavoriteBreedRecord } from "@cloudsmiths/types";
+import type { FavoriteImage, FavoriteImageDto } from "@cloudsmiths/types";
 
 import { readFavorites, saveFavorites } from "./favorites.store.js";
 
 @Injectable()
 export class FavoritesService {
-  async findAll(): Promise<FavoriteBreedRecord[]> {
+  async findAll(): Promise<FavoriteImage[]> {
     return readFavorites();
   }
 
-  async addFavorite(payload: FavoriteBreedDto): Promise<FavoriteBreedRecord[]> {
+  async addFavorite(payload: FavoriteImageDto): Promise<FavoriteImage[]> {
     const favorites = await readFavorites();
     const existing = favorites.find(
-      (favorite) => favorite.breed === payload.breed,
+      (favorite) => favorite.imageUrl === payload.imageUrl,
     );
 
     if (existing) {
@@ -21,8 +21,10 @@ export class FavoritesService {
     }
 
     const nextFavorites = favorites.concat({
+      id: crypto.randomUUID(),
       breed: payload.breed,
       label: payload.label,
+      imageUrl: payload.imageUrl,
       createdAt: new Date().toISOString(),
     });
 
@@ -30,11 +32,9 @@ export class FavoritesService {
     return nextFavorites;
   }
 
-  async removeFavorite(breed: string): Promise<FavoriteBreedRecord[]> {
+  async removeFavorite(id: string): Promise<FavoriteImage[]> {
     const favorites = await readFavorites();
-    const nextFavorites = favorites.filter(
-      (favorite) => favorite.breed !== breed,
-    );
+    const nextFavorites = favorites.filter((favorite) => favorite.id !== id);
 
     await saveFavorites(nextFavorites);
     return nextFavorites;
