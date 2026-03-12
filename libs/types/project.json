@@ -16,6 +16,13 @@
       "options": {
         "command": "eslint libs/types/src --ext .ts"
       }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "libs/types",
+        "command": "vitest run --config vitest.config.ts --coverage"
+      }
     }
   },
   "tags": ["scope:shared", "type:types"]

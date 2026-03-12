@@ -26,6 +26,13 @@
         "command": "eslint apps/frontend/src --ext .ts,.tsx"
       }
     },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/frontend",
+        "command": "vitest run --coverage"
+      }
+    },
     "preview": {
       "executor": "nx:run-commands",
       "options": {

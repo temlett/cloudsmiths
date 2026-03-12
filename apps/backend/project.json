@@ -30,6 +30,13 @@
       "options": {
         "command": "eslint apps/backend/src --ext .ts"
       }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/backend",
+        "command": "vitest run --config vitest.config.ts --coverage"
+      }
     }
   },
   "tags": []

@@ -64,6 +64,7 @@ npm run build          # build all Nx projects
 npm run build:frontend # build the frontend only
 npm run build:api      # compile the backend only
 npm run lint           # lint all Nx projects
+npm run test           # run automated tests with coverage
 npm run preview        # preview the frontend production build
 ```
 
@@ -91,4 +92,34 @@ The workspace has been validated with:
 ```bash
 npm run build
 npm run lint
+npm run test
 ```
+
+## Viewing coverage reports
+
+Running the test suite generates coverage in two ways:
+
+- a summary in the terminal output
+- HTML reports written to the workspace `coverage/` directory
+
+Coverage report locations:
+
+- `coverage/frontend/index.html`
+- `coverage/backend/index.html`
+- `coverage/types/index.html`
+
+After running:
+
+```bash
+npm run test
+```
+
+you can open a report directly on macOS with:
+
+```bash
+open coverage/frontend/index.html
+open coverage/backend/index.html
+open coverage/types/index.html
+```
+
+If you want to inspect the raw generated assets, browse the `coverage/` folder in the repository.
