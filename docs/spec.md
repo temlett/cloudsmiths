@@ -1,288 +1,283 @@
-# Dog Breed Browser -- Technical Assessment Spec
+# Dog Breed Browser — Delivered Specification
 
-## Project Overview
+## Summary
 
-Build a React single-page application that allows users to browse dog
-breeds and view images for a selected breed using the Dog CEO public
-API.
+This project began as a React technical assessment to browse dog breeds from the Dog CEO API. The delivered solution now exceeds the original brief and is implemented as an Nx monorepo with:
 
-The project demonstrates: - React fundamentals - clean component
-architecture - sensible state management - user-friendly UX - readable
-and maintainable code
+- a React + Vite frontend
+- a NestJS backend for persisting favorite images
+- a shared TypeScript types library
+- automated tests across frontend, backend, and shared types
 
-Estimated implementation time: 3--6 hours.
+The original assessment requirements have been met, and several stretch improvements have also been delivered.
 
-------------------------------------------------------------------------
+---
 
-# Objectives
+## Original Assessment Requirements: Status
 
-The application must allow users to:
+### Required capabilities
 
-1.  Load a list of dog breeds from an API
-2.  Search/filter breeds
-3.  Select a breed
-4.  View 3 random images of that breed
-5.  Experience loading and error states
+| Requirement                        | Status  | Notes                                                                                   |
+| ---------------------------------- | ------- | --------------------------------------------------------------------------------------- |
+| Load dog breeds from an API        | ✅ Done | Breeds are fetched from Dog CEO on startup.                                             |
+| Search/filter breeds               | ✅ Done | Case-insensitive filtering with partial matches.                                        |
+| Select a breed                     | ✅ Done | Breed list supports selection and active styling.                                       |
+| View 3 random images for the breed | ✅ Done | Three random images are requested per breed via the API service.                        |
+| Show loading states                | ✅ Done | Loading states exist for breeds and breed images.                                       |
+| Show error states                  | ✅ Done | Friendly error messages are rendered for breed/image loading failures.                  |
+| Clean, readable structure          | ✅ Done | Componentized frontend, service layer, custom hooks, shared types, and modular backend. |
+| README explains setup              | ✅ Done | README updated to reflect actual workspace setup and developer workflow.                |
 
-------------------------------------------------------------------------
+### Conclusion on scope coverage
 
-# Success Criteria
+Nothing essential from the original brief appears to be missing.
 
-The application is considered complete when:
+---
 
--   Breeds load successfully from the API
--   Search filtering works correctly
--   Breed selection triggers image loading
--   Exactly three images display per breed
--   Loading indicators appear during API calls
--   Errors are handled gracefully
--   Codebase is structured and readable
+## What Was Added Beyond the Original Brief
 
-------------------------------------------------------------------------
+The solution includes several improvements that were explicitly out of scope in the original spec or were only suggested as future enhancements.
 
-# Scope
+### 1. Authentication
 
-## In Scope
+- Sign-in flow backed by DummyJSON auth endpoints
+- Session persistence in browser session storage
+- Session hydration on app load
+- Automatic token refresh before expiry
+- Logout support
+- Auth-gated access to the dog browser UI
 
-Functional Requirements:
+### 2. Favorites persistence
 
--   Fetch dog breeds from API
--   Transform API response into usable list
--   Display breeds in UI
--   Provide search/filter input
--   Allow breed selection
--   Fetch and display images
--   Show loading indicators
--   Handle API errors
+- Users can save specific dog images as favorites
+- Users can remove favorites
+- Favorites are persisted through a local NestJS backend
+- Backend stores data in `data/favorites.json`
+- Favorites are viewable in a dedicated gallery tab
+- Users can jump from a saved favorite back into the breed browser
 
-Technical Requirements:
+### 3. Monorepo architecture
 
--   React functional components
--   Hooks-based state management
--   Modular component architecture
--   Dedicated API service layer
--   Clean styling
+- Nx workspace with separate frontend and backend applications
+- Shared `@cloudsmiths/types` library for cross-app type safety
+- Centralized scripts for running, building, linting, and testing the workspace
 
-------------------------------------------------------------------------
+### 4. Resilience and UX enhancements
 
-# Out of Scope
+- Client-side caching for breed list responses
+- Short-lived caching for favorites responses
+- In-memory image caching by breed
+- Retry handling for Dog CEO rate limiting (`429`)
+- Refresh action for loading a fresh set of breed images
+- Enlarged image modal with Escape-to-close support
+- Lazy-loaded gallery/favorites images
+- Explicit favorites loading and update error UI
+- Clearer empty state when breed search returns no matches
+- Configurable frontend environment variables for auth and favorites APIs
 
-Unless added as stretch goals:
+### 5. Testing
 
--   Authentication
--   Persistent backend storage
--   Complex routing
--   SSR frameworks
--   Full test coverage
--   Enterprise accessibility audits
+- Frontend service/component/utility tests
+- Backend service tests
+- Shared library tests
+- Coverage output for all projects
+- Integration-style frontend tests covering login, browse, and favorites flows
 
-------------------------------------------------------------------------
+---
 
-# User Stories
+## Delivered Functional Specification
 
-## Browse Breeds
+### Authentication
 
-As a user, I want to see a list of dog breeds so I can choose one to
-explore.
+As a user, I can sign in with valid DummyJSON credentials before accessing the app.
 
-## Search Breeds
+Acceptance:
 
-As a user, I want to filter breeds so I can quickly find one.
+- login form is shown when unauthenticated
+- authentication errors are surfaced to the user
+- authenticated session is restored when possible
+- expired sessions are refreshed automatically when possible
 
-## Select Breed
+### Browse breeds
 
-As a user, I want to select a breed to see images for it.
+As an authenticated user, I can view a list of dog breeds loaded from Dog CEO.
 
-## View Images
+Acceptance:
 
-As a user, I want to see three images of the breed.
+- breed list loads on app startup
+- API response is transformed into frontend-friendly options
+- breeds are displayed in a selectable list
 
-## Loading Feedback
+### Search breeds
 
-As a user, I want feedback during loading so I know the app is working.
+As an authenticated user, I can filter the breed list using a search field.
 
-## Error Handling
+Acceptance:
 
-As a user, I want helpful error messages when something goes wrong.
+- filtering is case-insensitive
+- partial matches are supported
+- clearing the search restores the full list
 
-------------------------------------------------------------------------
+### Select breed and view images
 
-# Functional Requirements
+As an authenticated user, I can select a breed and see a gallery of random images.
 
-## Breed List Retrieval
+Acceptance:
 
-The application must load dog breeds on startup.
+- selecting a breed triggers an image request
+- three random images are requested from Dog CEO
+- the gallery renders the currently loaded set
+- users can explicitly refresh images for the selected breed
 
-Acceptance Criteria: - API request on initial render - Breed list
-displayed after load - Response transformed to flat list
+### Save favorite images
 
-------------------------------------------------------------------------
+As an authenticated user, I can save and remove individual images as favorites.
 
-## Breed Search
+Acceptance:
 
-The user must be able to filter breeds.
+- each image card shows a favorite toggle
+- favorited images are visually distinguishable
+- toggling a favorite persists via the backend API
+- duplicate favorites are prevented on the backend
 
-Acceptance Criteria: - Search input present - Filtering is case
-insensitive - Partial matches supported - Empty search restores full
-list
+### Browse favorites
 
-------------------------------------------------------------------------
+As an authenticated user, I can view saved favorites in a dedicated gallery.
 
-## Breed Selection
+Acceptance:
 
-Acceptance Criteria: - Breed selectable from list - Selected breed
-visually highlighted - Selection triggers image request
+- favorites tab shows saved images
+- favorites can be enlarged
+- favorites can be removed
+- favorites can reopen the related breed in the browse tab
+- favorites loading and mutation failures are shown directly in the favorites view
 
-------------------------------------------------------------------------
+### Feedback and failure handling
 
-## Breed Image Retrieval
+As an authenticated user, I receive clear UI feedback during loading and failure states.
 
-Acceptance Criteria: - Fetch 3 images for selected breed - Display
-images in gallery - Switching breeds reloads images
+Acceptance:
 
-------------------------------------------------------------------------
+- loading states exist for breed list and breed image fetches
+- error states are shown when breed/image requests fail
+- authentication failures are shown clearly
+- the UI remains stable when API requests fail
 
-## Loading States
+---
 
-Acceptance Criteria: - Loading indicator for breed fetch - Loading
-indicator for image fetch
+## Technical Specification
 
-------------------------------------------------------------------------
+### Frontend
 
-## Error States
+- React 19
+- Vite 8
+- TypeScript
+- CSS Modules
+- Hooks-based state management
 
-Acceptance Criteria: - Friendly error message shown - UI remains stable
+Key frontend modules:
 
-------------------------------------------------------------------------
+- `useBreeds` for breed loading
+- `useBreedImages` for selected-breed gallery loading and caching
+- `useFavorites` for reading/updating favorite images
+- `services/dogApi.ts` for Dog CEO and favorites API integration
+- `services/auth.ts` for DummyJSON authentication/session handling
 
-# Non Functional Requirements
+### Backend
 
-## Code Quality
+- NestJS 11
+- File-based persistence to `data/favorites.json`
+- REST API under `/api/favorites`
 
--   Clear component separation
--   Consistent naming
--   API logic separated from UI
+Endpoints:
 
-## UX
+- `GET /api/favorites`
+- `POST /api/favorites`
+- `DELETE /api/favorites/:id`
 
--   Clean layout
--   Obvious selection state
--   Responsive search filtering
+### Shared library
 
-------------------------------------------------------------------------
+- `libs/types` exports dog, favorite, and auth domain types
 
-# Recommended Tech Stack
+---
 
--   React
--   TypeScript
--   Vite
--   Fetch API
--   CSS Modules or simple CSS
+## Architecture Notes
 
-------------------------------------------------------------------------
+### Frontend application
 
-# Suggested Project Structure
+- `apps/frontend`
+- auth-gated SPA experience
+- tabbed UI for browse/favorites flows
+- modal image preview
 
-    src/
-      components/
-        BreedSearch/
-        BreedList/
-        BreedListItem/
-        DogImageGallery/
-        LoadingState/
-        ErrorState/
-      hooks/
-        useBreeds.ts
-        useBreedImages.ts
-      services/
-        dogApi.ts
-      types/
-        dog.ts
-      utils/
-        breedTransform.ts
-      App.tsx
-      main.tsx
+### Backend application
 
-------------------------------------------------------------------------
+- `apps/backend`
+- focused favorites persistence API
+- deduplicates favorites by image URL
+- sorts favorites by creation time descending
 
-# Data Model
+### Shared types
 
-## Breed
+- `libs/types`
+- keeps contracts aligned across frontend and backend
 
-``` ts
-type Breed = string
-```
+---
 
-Example:
+## Non-Functional Outcomes
 
-\["beagle", "boxer", "husky"\]
+### Code quality
 
-## Image URL
+- clear separation between UI, hooks, services, and shared types
+- monorepo organization improves maintainability
+- reusable types reduce duplication and drift
 
-``` ts
-type BreedImageUrl = string
-```
+### Developer experience
 
-------------------------------------------------------------------------
+- simple npm scripts for common tasks
+- isolated frontend/backend builds and tests
+- coverage reports available locally
 
-# API Layer
+### UX improvements over baseline
 
-Functions:
+- authentication gate and session continuity
+- favorites workflow across sessions on the same local environment
+- image preview modal
+- refreshable galleries
+- caching to reduce unnecessary API requests
 
-``` ts
-getBreeds(): Promise<string[]>
-getBreedImages(breed: string): Promise<string[]>
-```
+---
 
-Responsibilities:
+## Known Differences from the Original Brief
 
--   isolate API logic
--   normalize responses
--   throw meaningful errors
+These are not gaps, but intentional scope changes:
 
-------------------------------------------------------------------------
+1. **Authentication is now required** before using the browser.
+2. **The project is no longer frontend-only**; it includes a local backend service.
+3. **The app includes persistent favorites**, which were originally out of scope.
+4. **The repository uses Nx**, rather than a single standalone Vite app.
 
-# UI Layout Recommendation
+---
 
-Two-column layout.
+## Remaining Gaps / Nice-to-Haves
 
-Left Panel: - title - search input - breed list
+No critical requirement gaps were identified relative to the original assessment.
 
-Right Panel: - selected breed title - image gallery
+Possible future enhancements if desired:
 
-------------------------------------------------------------------------
+- add explicit empty-state messaging when breed search returns no results
+- add deployment documentation if this moves beyond local assessment use
+- add browser-level end-to-end tests against a running app stack
+- move local file-backed favorites persistence to a database-backed store for shared environments
 
-# Edge Cases
+---
 
-Handle:
+## Definition of Done
 
--   empty API responses
--   no breed selected
--   slow API responses
--   search returning no results
--   rapid breed switching
+This solution should be considered complete for the implemented scope because:
 
-------------------------------------------------------------------------
-
-# Definition of Done
-
-The project is complete when:
-
--   app runs locally
--   breeds load
--   filtering works
--   images load correctly
--   loading states display
--   error states display
--   code structure is clear
--   README explains setup
-
-------------------------------------------------------------------------
-
-# Future Improvements (Optional)
-
--   caching breed images
--   retry button for errors
--   skeleton loaders
--   remember last selected breed
--   unit tests
+- original breed-browsing assessment requirements are satisfied
+- added authentication flow is working and documented
+- favorites persistence is working and documented
+- frontend, backend, and shared types are tested
+- developer setup instructions are documented in the README

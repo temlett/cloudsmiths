@@ -1,96 +1,69 @@
-# Dog Breed Browser -- Implementation Checklist / Kanban
+# Dog Breed Browser — Status Kanban
 
-## Backlog
+This board reflects the current truth of the delivered solution rather than the original implementation plan.
 
--   Define project structure
--   Initialize Vite project
--   Configure TypeScript
--   Create folder architecture
--   Create README
+## Done
 
-------------------------------------------------------------------------
+### Core assessment requirements
 
-## Setup
+- React frontend built for browsing dog breeds
+- Dog CEO breed list fetched on app startup
+- API response transformed into a frontend-friendly breed list
+- Breed search/filter implemented with case-insensitive partial matching
+- Breed selection state implemented
+- Random breed image loading implemented
+- Loading and error states implemented for breed and image requests
+- Clear component and hook separation implemented
 
--   Initialize Vite React TypeScript project
--   Install dependencies
--   Clean template files
--   Setup Git repository
--   Create base folders
+### Delivered product enhancements
 
-------------------------------------------------------------------------
+- Nx monorepo structure created
+- NestJS backend added for favorites persistence
+- Shared `@cloudsmiths/types` library added
+- Authentication flow integrated with DummyJSON
+- Session persistence and token refresh implemented
+- Favorites save/remove workflow implemented
+- Dedicated favorites gallery tab implemented
+- Modal image preview implemented
+- Refresh action for breed images implemented
+- Response caching added for breeds and favorites
+- In-memory caching added for breed images
+- Retry handling added for Dog CEO rate limiting
+- File-based local persistence added via `data/favorites.json`
 
-## API Layer
+### Quality and validation
 
--   Create API service module
--   Implement getBreeds()
--   Implement getBreedImages()
--   Add response transformation logic
--   Add error handling
+- Frontend tests added for services, utilities, and components
+- Backend tests added for favorites service
+- Shared library tests added
+- Coverage reporting enabled
+- Integration-style frontend tests added for login, browsing, search-empty-state, and favorites flows
+- README updated to document workspace usage
+- Spec updated to describe delivered scope accurately
 
-------------------------------------------------------------------------
+---
 
-## Breed Feature
+## Done, But Worth Noting
 
--   Create useBreeds hook
--   Fetch breeds on app load
--   Store breeds in state
--   Implement loading state
--   Implement error state
--   Render breed list component
+- The original brief described a frontend-only browser, but the delivered app now requires authentication and a local backend to access the full experience.
+- The original out-of-scope areas of authentication and persistence were implemented as stretch improvements.
+- Frontend auth and favorites base URLs are now configurable via documented Vite environment variables.
+- Deployment beyond local use will likely need a proper persistent datastore instead of file-backed storage.
 
-------------------------------------------------------------------------
+---
 
-## Search Feature
+## Nice to Have / Future Improvements
 
--   Create search input component
--   Implement filtering logic
--   Connect search state to breed list
+- Add browser-level end-to-end tests against a running deployed stack
+- Replace file-backed favorites persistence with database-backed storage for shared environments
+- Add richer deployment automation and environment-specific operational documentation
 
-------------------------------------------------------------------------
+---
 
-## Breed Selection
+## Not Planned Right Now
 
--   Add selected breed state
--   Create BreedListItem component
--   Highlight selected breed
--   Trigger image fetch on selection
-
-------------------------------------------------------------------------
-
-## Image Gallery
-
--   Create useBreedImages hook
--   Fetch images on breed selection
--   Implement loading state
--   Implement error state
--   Display images in grid layout
-
-------------------------------------------------------------------------
-
-## UI Polish
-
--   Add empty state UI
--   Style breed list
--   Style image gallery
--   Improve spacing and layout
--   Improve selection highlighting
-
-------------------------------------------------------------------------
-
-## Testing & Review
-
--   Test API error handling
--   Test search filtering
--   Test rapid breed switching
--   Clean unused code
--   Review component structure
-
-------------------------------------------------------------------------
-
-## Final Submission
-
--   Write README documentation
--   Add run instructions
--   Commit final code
--   Push repository
+- SSR or framework migration
+- Complex multi-page routing
+- Production-grade database persistence
+- Enterprise accessibility audit
+- Cloud deployment automation for this assessment submission
