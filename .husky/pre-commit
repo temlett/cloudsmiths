@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+echo "Running pre-commit quality gate: lint"
+npm run lint

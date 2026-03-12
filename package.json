@@ -12,7 +12,8 @@
     "build:api": "nx run @cloudsmiths/backend:build",
     "lint": "nx run-many -t lint",
     "test": "nx run-many -t test",
-    "preview": "nx run @cloudsmiths/frontend:preview"
+    "preview": "nx run @cloudsmiths/frontend:preview",
+    "prepare": "husky"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.16",
@@ -38,6 +39,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
+    "husky": "^9.1.7",
     "jsdom": "^28.1.0",
     "nx": "^22.5.4",
     "tsx": "^4.21.0",
