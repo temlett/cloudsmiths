@@ -11,7 +11,7 @@ FROM node:20-alpine AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm ci --omit=dev --ignore-scripts
 COPY --from=build /app/dist/apps/backend ./dist/apps/backend
 COPY --from=build /app/dist/libs ./dist/libs
 EXPOSE 3333
