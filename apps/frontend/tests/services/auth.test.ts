@@ -18,7 +18,7 @@ describe("auth service", () => {
   });
 
   it("stores tokens and user details without persisting the password", async () => {
-    vi.spyOn(global, "fetch").mockResolvedValueOnce(
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
       new Response(
         JSON.stringify({
           id: 1,
@@ -61,7 +61,7 @@ describe("auth service", () => {
       }),
     );
 
-    vi.spyOn(global, "fetch")
+    vi.spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(
         new Response(
           JSON.stringify({

@@ -6,7 +6,7 @@ import type {
 
 const DOG_API_BASE_URL = "https://dog.ceo/api";
 const FAVORITES_API_BASE_URL =
-  import.meta.env.VITE_FAVORITES_API_URL ?? "http://localhost:3333";
+  import.meta.env.BACKEND_API_URL ?? "http://localhost:3333";
 const BREEDS_CACHE_KEY = "cloudsmiths.cache.breeds";
 const FAVORITES_CACHE_KEY = "cloudsmiths.cache.favorites";
 const BREEDS_CACHE_TTL_MS = 60 * 60 * 1000;

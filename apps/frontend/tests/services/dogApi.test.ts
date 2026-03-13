@@ -25,7 +25,7 @@ describe("dog api service caching", () => {
   });
 
   it("caches breeds and avoids duplicate requests", async () => {
-    const fetchSpy = vi.spyOn(global, "fetch").mockResolvedValue(
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(
         JSON.stringify({
           message: {
@@ -49,7 +49,7 @@ describe("dog api service caching", () => {
   });
 
   it("caches favorites and hydrates them from storage", async () => {
-    const fetchSpy = vi.spyOn(global, "fetch").mockResolvedValueOnce(
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
       new Response(
         JSON.stringify({
           favorites: [
@@ -77,7 +77,7 @@ describe("dog api service caching", () => {
   });
 
   it("updates the favorites cache after add and remove mutations", async () => {
-    vi.spyOn(global, "fetch")
+    vi.spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(
         new Response(
           JSON.stringify({
@@ -120,7 +120,7 @@ describe("dog api service caching", () => {
 
   it("retries dog api requests after rate limiting using retry-after", async () => {
     const fetchSpy = vi
-      .spyOn(global, "fetch")
+      .spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(
         new Response(null, {
           status: 429,
@@ -149,7 +149,7 @@ describe("dog api service caching", () => {
   });
 
   it("surfaces an error when rate limiting continues past retry attempts", async () => {
-    const fetchSpy = vi.spyOn(global, "fetch").mockResolvedValue(
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(null, {
         status: 429,
       }),

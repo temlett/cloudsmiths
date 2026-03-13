@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nx run @cloudsmiths/frontend:dev",
     "dev:frontend": "nx run @cloudsmiths/frontend:dev",
-    "dev:api": "nx run @cloudsmiths/backend:dev",
+    "dev:backend": "nx run @cloudsmiths/backend:dev",
     "build": "nx run-many -t build",
     "build:frontend": "nx run @cloudsmiths/frontend:build",
     "build:api": "nx run @cloudsmiths/backend:build",

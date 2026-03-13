@@ -1,7 +1,7 @@
 import type { AuthSession, AuthenticatedUser } from "@cloudsmiths/types";
 
 const AUTH_API_BASE_URL =
-  import.meta.env.VITE_AUTH_API_BASE_URL ?? "https://dummyjson.com/auth";
+  import.meta.env.AUTH_BASE_URL ?? "https://dummyjson.com/auth";
 const AUTH_STORAGE_KEY = "cloudsmiths.auth.session";
 const DEFAULT_TOKEN_LIFETIME_MINUTES = 30;
 const TOKEN_REFRESH_BUFFER_MS = 30 * 1000;

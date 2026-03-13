@@ -81,7 +81,7 @@ npm install
 ### 1. Start the backend
 
 ```bash
-npm run dev:api
+npm run dev:backend
 ```
 
 This starts the NestJS favorites API at:
@@ -115,20 +115,20 @@ The frontend talks to the local favorites API by default:
 If you need to point the frontend somewhere else, override the API base URL when starting it:
 
 ```bash
-VITE_FAVORITES_API_URL=http://localhost:3333 npm run dev:frontend
+BACKEND_API_URL=http://localhost:3333 npm run dev:frontend
 ```
 
 You can also override the auth provider base URL:
 
 ```bash
-VITE_AUTH_API_BASE_URL=https://dummyjson.com/auth npm run dev:frontend
+AUTH_BASE_URL=https://dummyjson.com/auth npm run dev:frontend
 ```
 
 You can combine both when needed:
 
 ```bash
-VITE_FAVORITES_API_URL=http://localhost:3333 \
-VITE_AUTH_API_BASE_URL=https://dummyjson.com/auth \
+BACKEND_API_URL=http://localhost:3333 \
+AUTH_BASE_URL=https://dummyjson.com/auth \
 npm run dev:frontend
 ```
 
@@ -137,7 +137,7 @@ npm run dev:frontend
 ```bash
 npm run dev            # start the frontend through Nx
 npm run dev:frontend   # start the Vite frontend
-npm run dev:api        # start the favorites backend in watch mode
+npm run dev:backend        # start the favorites backend in watch mode
 npm run build          # build all Nx projects
 npm run build:frontend # build the frontend only
 npm run build:api      # build the backend only
@@ -220,7 +220,7 @@ npm run test
 
 ## Team quality automation
 
-This repository now includes guardrails that help demonstrate lead-level engineering ownership:
+This repository now includes guardrails that help enforce the coding standards:
 
 - `Husky` local hooks to stop low-quality changes before they leave a developer machine
 - a pull request GitHub Actions workflow that validates every PR targeting `main`
@@ -289,8 +289,8 @@ For non-local environments, the main requirements are:
 2. deploy the NestJS backend as a long-running HTTP service
 3. provide a writable persistent volume or replace file storage with a database-backed persistence layer
 4. set environment-specific frontend values for:
-   - `VITE_FAVORITES_API_URL`
-   - `VITE_AUTH_API_BASE_URL`
+   - `BACKEND_API_URL`
+   - `AUTH_BASE_URL`
 5. ensure CORS is configured correctly between the deployed frontend and backend
 
 For assessment/local use, file-backed persistence is acceptable. For shared or production-like environments, a proper database is recommended.
@@ -298,7 +298,7 @@ For assessment/local use, file-backed persistence is acceptable. For shared or p
 ## Suggested onboarding path for new developers
 
 1. Run `npm install`
-2. Start the backend with `npm run dev:api`
+2. Start the backend with `npm run dev:backend`
 3. Start the frontend with `npm run dev:frontend`
 4. Read `docs/spec.md` for delivered scope
 5. Read `docs/kanban.md` for current status and future ideas
