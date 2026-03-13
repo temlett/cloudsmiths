@@ -2,6 +2,10 @@
 
 This repository contains the delivered solution for the Dog Breed Browser assessment.
 
+## Live site
+
+- https://cloudsmiths.jono.me/
+
 What is included:
 
 - `apps/frontend` (`@cloudsmiths/frontend`) — a React + Vite single-page app
