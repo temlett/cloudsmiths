@@ -2,18 +2,22 @@
 
 ## Summary
 
-This project began as a React technical assessment to browse dog breeds from the Dog CEO API. The delivered solution now exceeds the original brief and is implemented as an Nx monorepo with:
+This project began as a React app for browsing dog breeds from the Dog CEO API. The current solution extends the original brief and is implemented as an Nx monorepo with:
 
 - a React + Vite frontend
 - a NestJS backend for persisting favorite images
 - a shared TypeScript types library
 - automated tests across frontend, backend, and shared types
 
-The original assessment requirements have been met, and several stretch improvements have also been delivered.
+Current live URL:
+
+- https://cloudsmiths.jono.me/
+
+The original requirements are covered, and several additional improvements are included as well.
 
 ---
 
-## Original Assessment Requirements: Status
+## Original Requirements: Status
 
 ### Required capabilities
 
@@ -36,7 +40,7 @@ Nothing essential from the original brief appears to be missing.
 
 ## What Was Added Beyond the Original Brief
 
-The solution includes several improvements that were explicitly out of scope in the original spec or were only suggested as future enhancements.
+The solution includes several improvements that were outside the original scope or were natural follow-on enhancements.
 
 ### 1. Authentication
 
@@ -78,6 +82,14 @@ The solution includes several improvements that were explicitly out of scope in 
 - Explicit favorites loading and update error UI
 - Clearer empty state when breed search returns no matches
 - Configurable frontend environment variables for auth and favorites APIs
+
+### 6. Hosted delivery
+
+- Public deployment is available at `https://cloudsmiths.jono.me/`
+- The live site is running on Google Cloud Run
+- Frontend is served as a production Vite build behind Nginx
+- Backend is deployed for the persisted favorites workflow
+- Hosted persistence is designed around a Postgres connection via `DATABASE_URL`
 
 ### 5. Testing
 
@@ -265,6 +277,7 @@ Endpoints:
 - image preview modal
 - refreshable galleries
 - caching to reduce unnecessary API requests
+- public hosted environment for trying the app
 
 ---
 
@@ -283,20 +296,19 @@ These are not gaps, but intentional scope changes:
 
 ## Remaining Gaps / Nice-to-Haves
 
-No critical requirement gaps were identified relative to the original assessment.
+No critical requirement gaps were identified relative to the original scope.
 
 Possible future enhancements if desired:
 
-- add explicit empty-state messaging when breed search returns no results
-- add deployment documentation if this moves beyond local assessment use
 - add browser-level end-to-end tests against a running app stack
 - add database migrations instead of relying on TypeORM schema synchronization for local database setup
+- add deeper operational monitoring/observability notes for the hosted deployment
 
 ---
 
 ## Definition of Done
 
-This solution should be considered complete for the implemented scope because:
+This solution is complete for the implemented scope because:
 
 - original breed-browsing assessment requirements are satisfied
 - added authentication flow is working and documented

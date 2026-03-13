@@ -38,6 +38,8 @@ This board reflects the current truth of the delivered solution rather than the 
 - Supabase-compatible `DATABASE_URL` support added for hosted Postgres
 - Cloud Run Dockerfiles added for backend and frontend deployment
 - GitHub Actions deployment workflow added for GCP
+- Live site available at `https://cloudsmiths.jono.me/`
+- Live site is running on Google Cloud Run
 
 ### Quality and validation
 
@@ -58,6 +60,7 @@ This board reflects the current truth of the delivered solution rather than the 
 - Frontend auth and favorites base URLs are now configurable via documented environment variables.
 - The backend now supports either the legacy JSON file store or local Postgres without changing API behavior.
 - Hosted deployment can target Supabase for data storage and Cloud Run for runtime.
+- The project now has a public live URL.
 - Deployment beyond local use will still benefit from stronger database setup practices such as migrations and managed environment configuration.
 
 ---
@@ -76,4 +79,4 @@ This board reflects the current truth of the delivered solution rather than the 
 - SSR or framework migration
 - Complex multi-page routing
 - Enterprise accessibility audit
-- Cloud deployment automation for this assessment submission
+- Additional deployment automation beyond the current setup

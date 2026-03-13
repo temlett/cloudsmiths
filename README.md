@@ -1,10 +1,17 @@
 # Cloudsmiths Dog Breed Browser Monorepo
 
-This repository contains the delivered solution for the Dog Breed Browser assessment.
+This repository contains my Dog Breed Browser solution.
 
 ## Live site
 
 - https://cloudsmiths.jono.me/
+
+Current hosted status:
+
+- frontend is live at the URL above
+- backend-backed favorites flow is deployed
+- the live site is running on Google Cloud Run
+- the current production deployment reflects the current state of the app
 
 What is included:
 
@@ -257,11 +264,21 @@ npm run test
 
 ## Deployment
 
-This repo now includes a GitHub Actions workflow at `.github/workflows/deploy-gcp.yml` that deploys:
+This repo includes a GitHub Actions workflow at `.github/workflows/deploy-gcp.yml` that deploys:
 
 - the NestJS backend to **Google Cloud Run**
 - the Vite frontend to **Google Cloud Run** as a static site served by Nginx
 - Postgres persistence through **Supabase** using `DATABASE_URL`
+
+### Current deployed environment
+
+The application is currently deployed and publicly reachable at:
+
+- https://cloudsmiths.jono.me/
+
+This is the primary live URL for the project.
+
+The live site is currently hosted on **Google Cloud Run**.
 
 ### Required GitHub secrets
 
@@ -325,9 +342,7 @@ The workflow at `.github/workflows/pull-request-quality.yml` runs on PRs into `m
 - lints the workspace
 - runs the full test suite
 - builds the workspace
-- uploads coverage artifacts for review/debugging
-
-This is a strong assessment signal because it shows ownership of team-wide delivery quality, not just feature implementation.
+- uploads coverage artifacts for review/debugging.
 
 The repository includes tests for:
 
@@ -384,9 +399,9 @@ For assessment/local use, file-backed persistence is still available. For shared
 6. Review `apps/frontend/src/App.tsx` to understand the main user flow
 7. Review `apps/backend/src/favorites` to understand persistence
 
-## Current assessment status
+## Current project status
 
-Based on the implemented functionality, the original requirements appear complete.
+The implemented functionality covers the original requirements and extends them with additional features.
 
 The main improvements beyond the brief are authentication, persistent favorites, shared types, caching, retry handling, and broader automated testing.
 
@@ -397,7 +412,13 @@ Additional improvements implemented in this solution:
 - configurable auth and backend frontend environment variables
 - integration-style frontend coverage for login, browse, and favorites flows
 
-Quality workflow improvements added for the assessment:
+Quality workflow improvements in this repo:
 
 - Husky pre-commit and pre-push hooks for local quality gates
 - a GitHub Actions PR workflow that runs lint, test, and build checks for changes targeting `main`
+
+Current state:
+
+- live deployment is available
+- documentation reflects the current architecture rather than the original frontend-only brief
+- the implemented scope is documented in this repository
