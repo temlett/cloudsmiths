@@ -14,6 +14,7 @@ dist-ssr
 coverage
 data/*.json
 *.local
+.env
 
 # Editor directories and files
 .vscode/*

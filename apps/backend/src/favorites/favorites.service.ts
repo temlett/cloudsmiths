@@ -1,42 +1,26 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 
 import type { FavoriteImage, FavoriteImageDto } from "@cloudsmiths/types";
 
-import { readFavorites, saveFavorites } from "./favorites.store.js";
+import { FAVORITES_STORAGE } from "./favorites.constants.js";
+import type { FavoritesRepository } from "./favorites.repository.js";
 
 @Injectable()
 export class FavoritesService {
+  constructor(
+    @Inject(FAVORITES_STORAGE)
+    private readonly favoritesRepository: FavoritesRepository,
+  ) {}
+
   async findAll(): Promise<FavoriteImage[]> {
-    return readFavorites();
+    return this.favoritesRepository.findAll();
   }
 
   async addFavorite(payload: FavoriteImageDto): Promise<FavoriteImage[]> {
-    const favorites = await readFavorites();
-    const existing = favorites.find(
-      (favorite) => favorite.imageUrl === payload.imageUrl,
-    );
-
-    if (existing) {
-      return favorites;
-    }
-
-    const nextFavorites = favorites.concat({
-      id: crypto.randomUUID(),
-      breed: payload.breed,
-      label: payload.label,
-      imageUrl: payload.imageUrl,
-      createdAt: new Date().toISOString(),
-    });
-
-    await saveFavorites(nextFavorites);
-    return nextFavorites;
+    return this.favoritesRepository.addFavorite(payload);
   }
 
   async removeFavorite(id: string): Promise<FavoriteImage[]> {
-    const favorites = await readFavorites();
-    const nextFavorites = favorites.filter((favorite) => favorite.id !== id);
-
-    await saveFavorites(nextFavorites);
-    return nextFavorites;
+    return this.favoritesRepository.removeFavorite(id);
   }
 }

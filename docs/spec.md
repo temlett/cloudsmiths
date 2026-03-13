@@ -52,7 +52,10 @@ The solution includes several improvements that were explicitly out of scope in 
 - Users can save specific dog images as favorites
 - Users can remove favorites
 - Favorites are persisted through a local NestJS backend
-- Backend stores data in `data/favorites.json`
+- Backend supports either file-backed persistence or Postgres-backed persistence
+- Legacy file storage remains available via environment configuration
+- Local Postgres development is supported via Docker Compose
+- Backend environment variables are loaded from a local `.env` file
 - Favorites are viewable in a dedicated gallery tab
 - Users can jump from a saved favorite back into the breed browser
 
@@ -186,8 +189,18 @@ Key frontend modules:
 ### Backend
 
 - NestJS 11
+- TypeORM-based persistence abstraction
 - File-based persistence to `data/favorites.json`
+- Optional PostgreSQL persistence
+- Environment-based storage selection via `FAVORITES_STORAGE`
+- Local environment loading via `dotenv`
 - REST API under `/api/favorites`
+
+Local development notes:
+
+- `docker-compose.yml` provides a local Postgres instance
+- local Postgres is mapped to host port `5431`
+- `.env.example` documents the default backend variables
 
 Endpoints:
 
@@ -216,6 +229,7 @@ Endpoints:
 - focused favorites persistence API
 - deduplicates favorites by image URL
 - sorts favorites by creation time descending
+- supports switching between file and Postgres storage without changing the API contract
 
 ### Shared types
 
@@ -237,6 +251,8 @@ Endpoints:
 - simple npm scripts for common tasks
 - isolated frontend/backend builds and tests
 - coverage reports available locally
+- local backend configuration is centralized in `.env`
+- local Postgres can be started with Docker Compose when database-backed persistence is desired
 
 ### UX improvements over baseline
 
@@ -256,6 +272,7 @@ These are not gaps, but intentional scope changes:
 2. **The project is no longer frontend-only**; it includes a local backend service.
 3. **The app includes persistent favorites**, which were originally out of scope.
 4. **The repository uses Nx**, rather than a single standalone Vite app.
+5. **Favorites persistence can now run on Postgres**, while retaining the original local file option for compatibility.
 
 ---
 
@@ -268,7 +285,7 @@ Possible future enhancements if desired:
 - add explicit empty-state messaging when breed search returns no results
 - add deployment documentation if this moves beyond local assessment use
 - add browser-level end-to-end tests against a running app stack
-- move local file-backed favorites persistence to a database-backed store for shared environments
+- add database migrations instead of relying on TypeORM schema synchronization for local database setup
 
 ---
 

@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: cloudsmiths-postgres
+    environment:
+      POSTGRES_DB: cloudsmiths
+      POSTGRES_USER: cloudsmiths
+      POSTGRES_PASSWORD: cloudsmiths
+    ports:
+      - "5431:5432"
+    volumes:
+      - cloudsmiths-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cloudsmiths -d cloudsmiths"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  cloudsmiths-postgres-data:

@@ -1,22 +1,23 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { FavoritesService } from "../../src/favorites/favorites.service.js";
-import * as store from "../../src/favorites/favorites.store.js";
-
-vi.mock("../../src/favorites/favorites.store.js", () => ({
-  readFavorites: vi.fn(),
-  saveFavorites: vi.fn(),
-}));
+import type { FavoritesRepository } from "../../src/favorites/favorites.repository.js";
 
 describe("FavoritesService", () => {
-  const service = new FavoritesService();
+  const repository: FavoritesRepository = {
+    findAll: vi.fn(async () => []),
+    addFavorite: vi.fn(async () => []),
+    removeFavorite: vi.fn(async () => []),
+  };
+
+  const service = new FavoritesService(repository as never);
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it("returns favorites from the store", async () => {
-    vi.mocked(store.readFavorites).mockResolvedValue([
+    vi.mocked(repository.findAll).mockResolvedValue([
       {
         id: "fav-1",
         breed: "beagle",
@@ -38,8 +39,15 @@ describe("FavoritesService", () => {
   });
 
   it("adds a new favorite when it does not already exist", async () => {
-    vi.mocked(store.readFavorites).mockResolvedValue([]);
-    vi.mocked(store.saveFavorites).mockResolvedValue(undefined);
+    vi.mocked(repository.addFavorite).mockResolvedValue([
+      {
+        id: "generated-id",
+        breed: "pug",
+        label: "Pug",
+        imageUrl: "https://images.example/pug-1.jpg",
+        createdAt: "2026-01-01T00:00:00.000Z",
+      },
+    ]);
 
     const result = await service.addFavorite({
       breed: "pug",
@@ -52,8 +60,9 @@ describe("FavoritesService", () => {
       breed: "pug",
       label: "Pug",
       imageUrl: "https://images.example/pug-1.jpg",
+      createdAt: "2026-01-01T00:00:00.000Z",
     });
-    expect(store.saveFavorites).toHaveBeenCalledTimes(1);
+    expect(repository.addFavorite).toHaveBeenCalledTimes(1);
   });
 
   it("does not duplicate an existing favorite", async () => {
@@ -66,7 +75,7 @@ describe("FavoritesService", () => {
         createdAt: "2026-01-01T00:00:00.000Z",
       },
     ];
-    vi.mocked(store.readFavorites).mockResolvedValue(existing);
+    vi.mocked(repository.addFavorite).mockResolvedValue(existing);
 
     const result = await service.addFavorite({
       breed: "pug",
@@ -75,18 +84,11 @@ describe("FavoritesService", () => {
     });
 
     expect(result).toEqual(existing);
-    expect(store.saveFavorites).not.toHaveBeenCalled();
+    expect(repository.addFavorite).toHaveBeenCalledTimes(1);
   });
 
   it("removes a favorite by breed", async () => {
-    vi.mocked(store.readFavorites).mockResolvedValue([
-      {
-        id: "fav-2",
-        breed: "pug",
-        label: "Pug",
-        imageUrl: "https://images.example/pug-1.jpg",
-        createdAt: "2026-01-01T00:00:00.000Z",
-      },
+    vi.mocked(repository.removeFavorite).mockResolvedValue([
       {
         id: "fav-3",
         breed: "beagle",
@@ -95,7 +97,6 @@ describe("FavoritesService", () => {
         createdAt: "2026-01-02T00:00:00.000Z",
       },
     ]);
-    vi.mocked(store.saveFavorites).mockResolvedValue(undefined);
 
     const result = await service.removeFavorite("fav-2");
 
@@ -108,6 +109,6 @@ describe("FavoritesService", () => {
         createdAt: "2026-01-02T00:00:00.000Z",
       },
     ]);
-    expect(store.saveFavorites).toHaveBeenCalledWith(result);
+    expect(repository.removeFavorite).toHaveBeenCalledWith("fav-2");
   });
 });

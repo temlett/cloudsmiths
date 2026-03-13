@@ -49,6 +49,8 @@ You also need valid DummyJSON credentials to sign in before you can use the dog 
 - React 19
 - Vite 8
 - NestJS 11
+- TypeORM
+- PostgreSQL
 - TypeScript
 - Vitest
 - CSS Modules
@@ -58,7 +60,7 @@ You also need valid DummyJSON credentials to sign in before you can use the dog 
 ```text
 apps/
   frontend/        # React SPA powered by Vite
-  backend/         # NestJS API with file-based persistence
+  backend/         # NestJS API with file or Postgres persistence
 libs/
   types/           # Shared TypeScript types used across apps
 docs/              # Living specification and kanban/status docs
@@ -74,6 +76,13 @@ data/              # Local persisted favorites data
 
 ```bash
 npm install
+cp .env.example .env
+```
+
+To use local Postgres persistence, start the database container:
+
+```bash
+docker compose up -d postgres
 ```
 
 ## Quick start
@@ -87,6 +96,16 @@ npm run dev:backend
 This starts the NestJS favorites API at:
 
 - `http://localhost:3333`
+
+By default the backend keeps using the existing file-backed storage. To switch to Postgres locally, start it with:
+
+```bash
+FAVORITES_STORAGE=postgres npm run dev:backend
+```
+
+The default Postgres connection values match `docker-compose.yml`. Override `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_DB`, `POSTGRES_USER`, or `POSTGRES_PASSWORD` if needed.
+
+The local Docker mapping uses host port `5431` to avoid clashes with other Postgres instances already using `5432`.
 
 ### 2. Start the frontend
 
@@ -107,6 +126,8 @@ Open the frontend and authenticate with valid DummyJSON credentials.
 The app uses DummyJSON for login and token refresh, and keeps the active session in browser session storage.
 
 ## Environment configuration
+
+The backend automatically loads environment variables from a local `.env` file via `dotenv`, so the usual local setup is to copy `.env.example` to `.env` and edit values there as needed.
 
 The frontend talks to the local favorites API by default:
 
@@ -166,10 +187,12 @@ Important areas in `apps/backend`:
 - `src/favorites/favorites.controller.ts` — REST endpoints
 - `src/favorites/favorites.service.ts` — business logic
 - `src/favorites/favorites.store.ts` — file persistence layer
+- `src/favorites/favorites-postgres.repository.ts` — Postgres persistence layer
 
-Favorites are stored locally in:
+Favorites can be stored either in:
 
-- `data/favorites.json`
+- `data/favorites.json` when `FAVORITES_STORAGE=file`
+- Postgres when `FAVORITES_STORAGE=postgres`
 
 ### Shared types
 
@@ -278,7 +301,7 @@ open coverage/types/index.html
 
 - Authentication is required before the browser UI becomes available.
 - The favorites experience depends on the backend running locally.
-- Favorites persistence is file-based and intended for local development/assessment usage.
+- Favorites persistence can use either the legacy local file store or local Postgres.
 - The favorites tab now shows explicit loading, load-error, and update-error states.
 
 ## Deployment notes
@@ -287,13 +310,13 @@ For non-local environments, the main requirements are:
 
 1. deploy the frontend as a static Vite build
 2. deploy the NestJS backend as a long-running HTTP service
-3. provide a writable persistent volume or replace file storage with a database-backed persistence layer
+3. provide a writable persistent volume for file storage or configure a database connection
 4. set environment-specific frontend values for:
    - `BACKEND_API_URL`
    - `AUTH_BASE_URL`
 5. ensure CORS is configured correctly between the deployed frontend and backend
 
-For assessment/local use, file-backed persistence is acceptable. For shared or production-like environments, a proper database is recommended.
+For assessment/local use, file-backed persistence is still available. For shared or production-like environments, Postgres is the better default.
 
 ## Suggested onboarding path for new developers
 
