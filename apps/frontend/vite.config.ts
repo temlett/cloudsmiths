@@ -8,6 +8,7 @@ const root = fileURLToPath(new URL(".", import.meta.url));
 export default defineConfig({
   root,
   plugins: [react()],
+  envPrefix: ["VITE_", "BACKEND_", "AUTH_"],
   server: {
     port: 4200,
   },
