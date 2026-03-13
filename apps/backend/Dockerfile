@@ -14,5 +14,5 @@ COPY package*.json ./
 RUN npm ci --omit=dev --ignore-scripts
 COPY --from=build /app/dist/apps/backend ./dist/apps/backend
 COPY --from=build /app/dist/libs ./dist/libs
-EXPOSE 3333
+EXPOSE 8080
 CMD ["node", "dist/apps/backend/main.js"]
