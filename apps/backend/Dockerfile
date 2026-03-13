@@ -15,4 +15,4 @@ RUN npm ci --omit=dev --ignore-scripts
 COPY --from=build /app/dist/apps/backend ./dist/apps/backend
 COPY --from=build /app/dist/libs ./dist/libs
 EXPOSE 8080
-CMD ["node", "dist/apps/backend/main.js"]
+CMD ["node", "dist/apps/backend/apps/backend/src/main.js"]

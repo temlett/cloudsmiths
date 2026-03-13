@@ -1,0 +1,8 @@
+node_modules
+.git
+.nx
+coverage
+dist
+data/*.json
+.env
+.env.*
