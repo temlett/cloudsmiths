@@ -103,7 +103,7 @@ By default the backend keeps using the existing file-backed storage. To switch t
 FAVORITES_STORAGE=postgres npm run dev:backend
 ```
 
-The default Postgres connection values match `docker-compose.yml`. Override `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_DB`, `POSTGRES_USER`, or `POSTGRES_PASSWORD` if needed.
+The backend can connect either through `DATABASE_URL` or through the individual `POSTGRES_*` variables. For local Docker usage, the default `POSTGRES_*` values match `docker-compose.yml`.
 
 The local Docker mapping uses host port `5431` to avoid clashes with other Postgres instances already using `5432`.
 
@@ -128,6 +128,16 @@ The app uses DummyJSON for login and token refresh, and keeps the active session
 ## Environment configuration
 
 The backend automatically loads environment variables from a local `.env` file via `dotenv`, so the usual local setup is to copy `.env.example` to `.env` and edit values there as needed.
+
+For hosted Postgres providers such as Supabase, set:
+
+```bash
+FAVORITES_STORAGE=postgres
+DATABASE_URL=postgresql://...
+DATABASE_SSL=true
+```
+
+For local Docker Compose Postgres, keep `DATABASE_URL` empty and use the `POSTGRES_*` variables instead.
 
 The frontend talks to the local favorites API by default:
 
@@ -240,6 +250,48 @@ npm run build
 npm run lint
 npm run test
 ```
+
+## Deployment
+
+This repo now includes a GitHub Actions workflow at `.github/workflows/deploy-gcp.yml` that deploys:
+
+- the NestJS backend to **Google Cloud Run**
+- the Vite frontend to **Google Cloud Run** as a static site served by Nginx
+- Postgres persistence through **Supabase** using `DATABASE_URL`
+
+### Required GitHub secrets
+
+- `GCP_WORKLOAD_IDENTITY_PROVIDER`
+- `GCP_SERVICE_ACCOUNT_EMAIL`
+- `SUPABASE_DATABASE_URL`
+
+### Recommended GitHub repository variables
+
+- `GCP_PROJECT_ID`
+- `GCP_REGION`
+- `GAR_LOCATION`
+- `GAR_REPOSITORY`
+- `BACKEND_SERVICE_NAME`
+- `FRONTEND_SERVICE_NAME`
+- `FRONTEND_BACKEND_API_URL`
+- `FRONTEND_AUTH_BASE_URL`
+
+### Deployment notes
+
+- `SUPABASE_DATABASE_URL` should be the Supabase pooled/direct Postgres connection string.
+- Cloud Run injects `PORT`; the backend already respects it.
+- The workflow builds and pushes Docker images to Artifact Registry before deploying both services.
+- For Supabase, SSL should remain enabled in hosted environments.
+
+### First-time dev bootstrap for GCP
+
+If you have created a fresh GCP project and want to bootstrap the deployment prerequisites before moving to Terraform, use:
+
+```bash
+bash infra/dev/bootstrap-gcp.sh
+```
+
+See `infra/dev/README.md` for the required environment variables, what the script creates, and which GitHub secrets/variables you must set afterwards.
 
 ## Team quality automation
 

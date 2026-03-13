@@ -35,6 +35,9 @@ This board reflects the current truth of the delivered solution rather than the 
 - Favorites storage selection added via `FAVORITES_STORAGE`
 - Backend `.env` loading added via `dotenv`
 - Local Postgres host port moved to `5431` to avoid clashes with existing local databases
+- Supabase-compatible `DATABASE_URL` support added for hosted Postgres
+- Cloud Run Dockerfiles added for backend and frontend deployment
+- GitHub Actions deployment workflow added for GCP
 
 ### Quality and validation
 
@@ -54,6 +57,7 @@ This board reflects the current truth of the delivered solution rather than the 
 - The original out-of-scope areas of authentication and persistence were implemented as stretch improvements.
 - Frontend auth and favorites base URLs are now configurable via documented environment variables.
 - The backend now supports either the legacy JSON file store or local Postgres without changing API behavior.
+- Hosted deployment can target Supabase for data storage and Cloud Run for runtime.
 - Deployment beyond local use will still benefit from stronger database setup practices such as migrations and managed environment configuration.
 
 ---
@@ -63,6 +67,7 @@ This board reflects the current truth of the delivered solution rather than the 
 - Add browser-level end-to-end tests against a running deployed stack
 - Add proper database migrations for the Postgres-backed favorites store
 - Add richer deployment automation and environment-specific operational documentation
+- Split frontend deployment to a lower-cost static hosting platform if Cloud Run costs/limits become undesirable
 
 ---
 

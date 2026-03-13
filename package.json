@@ -9,7 +9,7 @@
     "dev:backend": "nx run @cloudsmiths/backend:dev",
     "build": "nx run-many -t build",
     "build:frontend": "nx run @cloudsmiths/frontend:build",
-    "build:api": "nx run @cloudsmiths/backend:build",
+    "build:backend": "nx run @cloudsmiths/backend:build",
     "lint": "nx run-many -t lint",
     "test": "nx run-many -t test",
     "preview": "nx run @cloudsmiths/frontend:preview",

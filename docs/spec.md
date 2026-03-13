@@ -56,6 +56,7 @@ The solution includes several improvements that were explicitly out of scope in 
 - Legacy file storage remains available via environment configuration
 - Local Postgres development is supported via Docker Compose
 - Backend environment variables are loaded from a local `.env` file
+- Hosted Postgres deployment can use Supabase via `DATABASE_URL`
 - Favorites are viewable in a dedicated gallery tab
 - Users can jump from a saved favorite back into the breed browser
 
@@ -194,6 +195,7 @@ Key frontend modules:
 - Optional PostgreSQL persistence
 - Environment-based storage selection via `FAVORITES_STORAGE`
 - Local environment loading via `dotenv`
+- Hosted database connection via `DATABASE_URL`
 - REST API under `/api/favorites`
 
 Local development notes:
@@ -201,6 +203,7 @@ Local development notes:
 - `docker-compose.yml` provides a local Postgres instance
 - local Postgres is mapped to host port `5431`
 - `.env.example` documents the default backend variables
+- `.github/workflows/deploy-gcp.yml` provides CI/CD for Cloud Run deployments
 
 Endpoints:
 
@@ -253,6 +256,7 @@ Endpoints:
 - coverage reports available locally
 - local backend configuration is centralized in `.env`
 - local Postgres can be started with Docker Compose when database-backed persistence is desired
+- a GitHub Actions workflow is available for deploying frontend and backend to GCP Cloud Run
 
 ### UX improvements over baseline
 
@@ -273,6 +277,7 @@ These are not gaps, but intentional scope changes:
 3. **The app includes persistent favorites**, which were originally out of scope.
 4. **The repository uses Nx**, rather than a single standalone Vite app.
 5. **Favorites persistence can now run on Postgres**, while retaining the original local file option for compatibility.
+6. **The project is prepared for hosted deployment**, using Supabase Postgres and GCP Cloud Run.
 
 ---
 
